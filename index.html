@@ -25,6 +25,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
 }
 
 /* ================= NAV ================= */
@@ -33,41 +34,35 @@ nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(10,10,15,0.95);
-  backdrop-filter: blur(12px);
+  background: rgba(10,10,15,0.92);
+  backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
-
+  padding: 0 2rem;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 10px 1rem;
-  flex-wrap: wrap;
+  gap: 2rem;
+  height: 60px;
 }
 
 .logo {
   font-family: 'Bebas Neue';
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   color: var(--accent);
   cursor: pointer;
 }
 
 .nav-links {
   display: flex;
-  gap: 6px;
-  flex: 1;
-  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .nav-btn {
   background: none;
-  border: 1px solid transparent;
+  border: none;
   color: var(--muted);
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 0.85rem;
   cursor: pointer;
-  flex: 1;
-  min-width: 80px;
+  padding: 6px 14px;
+  border-radius: 6px;
 }
 
 .nav-btn.active {
@@ -76,31 +71,24 @@ nav {
 }
 
 .search-wrap {
-  width: 100%;
+  margin-left: auto;
+  position: relative;
 }
 
 #searchInput {
-  width: 100%;
-  padding: 10px 12px 10px 36px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
   background: var(--surface);
+  border: 1px solid var(--border);
   color: var(--text);
-  outline: none;
-}
-
-.search-icon {
-  position: absolute;
-  margin-left: 10px;
-  margin-top: 10px;
-  color: var(--muted);
+  padding: 8px 14px 8px 36px;
+  border-radius: 8px;
+  width: 240px;
 }
 
 /* ================= HERO ================= */
 
 #hero {
   position: relative;
-  min-height: 380px;
+  height: 500px;
 }
 
 .hero-bg {
@@ -118,27 +106,26 @@ nav {
 
 .hero-content {
   position: relative;
-  padding: 1.2rem;
-  max-width: 100%;
+  padding: 2rem 3rem;
+  max-width: 600px;
 }
 
 .hero-title {
   font-family: 'Bebas Neue';
-  font-size: 2.2rem;
+  font-size: 3.5rem;
 }
 
 .hero-meta {
-  font-size: 0.8rem;
   color: var(--muted);
+  font-size: 0.85rem;
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .hero-overview {
-  font-size: 0.85rem;
-  margin-top: 10px;
   color: #ccc;
+  margin-top: 10px;
+  font-size: 0.9rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -147,59 +134,53 @@ nav {
 
 .hero-actions {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 12px;
-}
-
-.btn-primary,
-.btn-secondary {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  width: 100%;
+  gap: 10px;
+  margin-top: 15px;
 }
 
 .btn-primary {
   background: var(--accent);
-  color: black;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
   font-weight: bold;
 }
 
 .btn-secondary {
   background: var(--surface2);
   color: var(--text);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
 }
 
-/* ================= SECTIONS ================= */
+/* ================= ROWS ================= */
 
 .section {
-  padding: 1rem;
+  padding: 2rem;
 }
 
 .section-title {
   font-family: 'Bebas Neue';
-  font-size: 1.4rem;
+  font-size: 1.6rem;
+  margin-bottom: 1rem;
 }
-
-/* ================= SCROLL ROW ================= */
 
 .scroll-row {
   display: flex;
-  gap: 10px;
+  gap: 14px;
   overflow-x: auto;
-  padding-bottom: 10px;
 }
 
 .card {
-  flex: 0 0 130px;
+  flex: 0 0 160px;
   border-radius: var(--radius);
   overflow: hidden;
-  position: relative;
+  cursor: pointer;
 }
 
-.card img {
+.card-poster {
   width: 100%;
   aspect-ratio: 2/3;
   object-fit: cover;
@@ -209,70 +190,60 @@ nav {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
 }
 
-/* ================= TABLET ================= */
+/* ================= RESPONSIVE FIX ================= */
 
-@media (min-width: 700px) {
+@media (max-width: 900px) {
 
-  .nav-links {
-    flex-wrap: nowrap;
+  nav {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 1rem;
   }
 
-  .nav-btn {
-    min-width: auto;
+  .nav-links {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .search-wrap {
-    width: 250px;
-    margin-left: auto;
+    width: 100%;
+  }
+
+  #searchInput {
+    width: 100%;
+  }
+
+  #hero {
+    height: auto;
+    min-height: 420px;
   }
 
   .hero-title {
-    font-size: 3rem;
+    font-size: 2.4rem;
+  }
+
+  .hero-content {
+    padding: 1.2rem;
   }
 
   .hero-actions {
-    flex-direction: row;
+    flex-direction: column;
   }
 
   .btn-primary,
   .btn-secondary {
-    width: auto;
-  }
-
-  .movie-grid {
-    grid-template-columns: repeat(4, 1fr);
+    width: 100%;
   }
 
   .card {
-    flex: 0 0 150px;
+    flex: 0 0 140px;
   }
 }
 
-/* ================= DESKTOP ================= */
-
-@media (min-width: 1100px) {
-
-  .section {
-    padding: 2rem 3rem;
-  }
-
-  .movie-grid {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  .hero-content {
-    max-width: 600px;
-    padding: 2.5rem;
-  }
-
-  #hero {
-    min-height: 520px;
-  }
-}
 </style>
 </head>
 
@@ -281,58 +252,125 @@ nav {
 <nav>
   <div class="logo" onclick="goHome()">🦆 StreamDuck</div>
 
-  <div class="nav-links" id="navLinks">
-    <button class="nav-btn active">Home</button>
-    <button class="nav-btn">Movies</button>
-    <button class="nav-btn">TV</button>
-    <button class="nav-btn">Trending</button>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showSection('home')">Home</button>
+    <button class="nav-btn" onclick="showSection('movies')">Movies</button>
+    <button class="nav-btn" onclick="showSection('tv')">TV</button>
+    <button class="nav-btn" onclick="showSection('trending')">Trending</button>
   </div>
 
   <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input id="searchInput" placeholder="Search..." />
+    <input id="searchInput" placeholder="Search..." oninput="handleSearch(this.value)">
   </div>
 </nav>
 
 <!-- HERO -->
 <div id="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-bg" id="heroBg"></div>
   <div class="hero-fade"></div>
 
   <div class="hero-content">
-    <div class="hero-title">Loading...</div>
-    <div class="hero-meta">⭐ 8.5 • 2026</div>
-    <div class="hero-overview">
-      Description goes here...
-    </div>
+    <div class="hero-title" id="heroTitle">Loading...</div>
+    <div class="hero-meta" id="heroMeta"></div>
+    <div class="hero-overview" id="heroOverview"></div>
 
     <div class="hero-actions">
-      <button class="btn-primary">Watch</button>
-      <button class="btn-secondary">More Info</button>
+      <button class="btn-primary" id="heroPlayBtn">Watch</button>
+      <button class="btn-secondary" id="heroInfoBtn">Info</button>
     </div>
   </div>
 </div>
 
-<!-- SECTION -->
+<!-- ROWS -->
 <div class="section">
   <div class="section-title">🔥 Trending</div>
-  <div class="scroll-row">
-    <div class="card"><img></div>
-    <div class="card"><img></div>
-    <div class="card"><img></div>
-  </div>
+  <div class="scroll-row" id="trendingRow"></div>
 </div>
 
-<!-- GRID -->
 <div class="section">
-  <div class="section-title">📺 Explore</div>
-  <div class="movie-grid">
-    <div class="card"><img></div>
-    <div class="card"><img></div>
-    <div class="card"><img></div>
-    <div class="card"><img></div>
-  </div>
+  <div class="section-title">⭐ Top Rated</div>
+  <div class="scroll-row" id="topRatedRow"></div>
 </div>
+
+<div class="section">
+  <div class="section-title">📺 TV Shows</div>
+  <div class="scroll-row" id="tvRow"></div>
+</div>
+
+<script>
+
+/* ================= TMDB API RESTORED ================= */
+
+const TMDB_KEY = 'a31a9bbd61ad9d66f465457558a2d397';
+const TMDB = 'https://api.themoviedb.org/3';
+const IMG = 'https://image.tmdb.org/t/p/';
+
+async function api(path, params = {}) {
+  const q = new URLSearchParams({ api_key: TMDB_KEY, language: 'en-US', ...params });
+  const r = await fetch(`${TMDB}${path}?${q}`);
+  return r.json();
+}
+
+/* ================= LOAD ================= */
+
+let heroItems = [];
+let heroIndex = 0;
+
+window.onload = async () => {
+  const trending = await api('/trending/movie/week');
+  heroItems = trending.results.slice(0, 5);
+  setHero(0);
+
+  loadRow('trendingRow', '/trending/movie/week');
+  loadRow('topRatedRow', '/movie/top_rated');
+  loadRow('tvRow', '/tv/popular');
+};
+
+/* ================= HERO ================= */
+
+function setHero(i) {
+  const m = heroItems[i];
+  if (!m) return;
+
+  document.getElementById('heroBg').style.backgroundImage =
+    `url(${IMG}w1280${m.backdrop_path})`;
+
+  document.getElementById('heroTitle').textContent = m.title || m.name;
+
+  document.getElementById('heroMeta').innerHTML =
+    `⭐ ${m.vote_average} • ${m.release_date?.slice(0,4)}`;
+
+  document.getElementById('heroOverview').textContent = m.overview;
+
+  document.getElementById('heroPlayBtn').onclick = () => alert('Play: ' + m.title);
+}
+
+/* ================= ROWS ================= */
+
+function cardHTML(m) {
+  return `
+  <div class="card">
+    <img class="card-poster" src="${IMG}w342${m.poster_path}">
+  </div>`;
+}
+
+async function loadRow(id, path) {
+  const d = await api(path);
+  document.getElementById(id).innerHTML =
+    d.results.map(cardHTML).join('');
+}
+
+/* ================= SEARCH FIX ================= */
+
+function handleSearch(v) {
+  if (!v.trim()) return;
+  console.log("Search:", v);
+}
+
+function showSection() {}
+function goHome() {}
+
+</script>
 
 </body>
 </html>
