@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>StreamDuck</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
   :root {
     --bg: #0a0a0f;
@@ -17,8 +18,9 @@
     --muted: #888;
     --radius: 10px;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; transition: background 0.4s, color 0.4s; }
 
   /* NAV */
   nav {
@@ -38,6 +40,7 @@
     cursor: pointer; 
     user-select: none;
     white-space: nowrap;
+    transition: color 0.4s;
   }
 
   .nav-links { display: flex; gap: 0.6rem; flex-wrap: wrap; }
@@ -87,6 +90,7 @@
     display: inline-block; background: var(--accent); color: #000;
     font-size: 0.7rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
     padding: 4px 10px; border-radius: 4px; margin-bottom: 0.75rem;
+    transition: background 0.4s;
   }
   .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem; line-height: 1; margin-bottom: 0.5rem; }
   .hero-meta { font-size: 0.85rem; color: var(--muted); margin-bottom: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
@@ -99,7 +103,7 @@
     padding: 12px 22px; border-radius: 10px; cursor: pointer; transition: all 0.2s;
     display: flex; align-items: center; gap: 6px;
   }
-  .btn-primary:hover { background: #ffb733; transform: translateY(-1px); }
+  .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
   .btn-secondary {
     background: rgba(255,255,255,0.12); color: var(--text); border: 1px solid rgba(255,255,255,0.2);
@@ -156,10 +160,6 @@
   }
   .card:hover .play-btn-overlay { opacity: 1; }
 
-  /* SKELETON */
-  .skeleton { background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: var(--radius); }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
   /* MODAL / PLAYER */
   #playerModal {
     display: none; position: fixed; inset: 0; z-index: 999;
@@ -192,9 +192,6 @@
   #gridPage { display: none; padding: 2rem; }
   #gridPage.open { display: block; }
   .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 16px; }
-
-  /* HOME */
-  #homePage {}
 
   /* search results */
   #searchPage { display: none; padding: 2rem; }
@@ -251,9 +248,73 @@
     .movie-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .hero-title { font-size: 2.1rem; }
   }
+
+  /* =========================
+     SECTION THEMES
+     ========================= */
+
+  body.theme-home {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --surface2: #1a1a26;
+    --border: rgba(255,255,255,0.07);
+    --accent: #ffa500;
+    --accent2: #02075d;
+    --text: #f0f0f0;
+    --muted: #888;
+  }
+
+  /* 🎬 Movies (Netflix vibe) */
+  body.theme-movies {
+    --bg: #050507;
+    --surface: #0f0f12;
+    --surface2: #17171d;
+    --border: rgba(255,255,255,0.08);
+    --accent: #e50914;
+    --accent2: #550006;
+    --text: #f5f5f5;
+    --muted: #9a9a9a;
+  }
+
+  /* 📺 TV Shows (premium blue streaming vibe) */
+  body.theme-tv {
+    --bg: #05070f;
+    --surface: #0b0f1a;
+    --surface2: #121a2b;
+    --border: rgba(255,255,255,0.08);
+    --accent: #3da9ff;
+    --accent2: #0a2d5d;
+    --text: #f4f8ff;
+    --muted: #8da2c0;
+  }
+
+  /* 🔥 Trending (neon green hype vibe) */
+  body.theme-trending {
+    --bg: #050a06;
+    --surface: #0b140e;
+    --surface2: #132018;
+    --border: rgba(255,255,255,0.08);
+    --accent: #00ff7b;
+    --accent2: #025d2d;
+    --text: #eafff1;
+    --muted: #7fae90;
+  }
+
+  /* 🍥 Anime (pretty pink girly vibe) */
+  body.theme-anime {
+    --bg: #140611;
+    --surface: #1d0b18;
+    --surface2: #2a1022;
+    --border: rgba(255,192,203,0.18);
+    --accent: #ff69b4;
+    --accent2: #ffb6c1;
+    --text: #fff0f7;
+    --muted: #d79ab8;
+  }
 </style>
 </head>
-<body>
+
+<body class="theme-home">
 
 <nav>
   <div class="logo" onclick="goHome()">🦆 StreamDuck</div>
@@ -323,7 +384,6 @@
     <div class="scroll-row" id="tvRow"></div>
   </div>
 
-  <!-- ANIME HOME ROW -->
   <div class="section">
     <div class="section-header">
       <span class="section-title">🍥 Popular Anime</span>
@@ -333,7 +393,7 @@
   </div>
 </div>
 
-<!-- GRID PAGE (Movies / TV / Trending / Anime) -->
+<!-- GRID PAGE -->
 <div id="gridPage">
   <div style="margin-bottom:1.5rem;">
     <h2 id="gridTitle" style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:1px;margin-bottom:1rem;"></h2>
@@ -374,7 +434,7 @@
 <footer>StreamDuck &copy; 2026 &mdash; For personal use only</footer>
 
 <script>
-const TMDB_KEY = 'a31a9bbd61ad9d66f465457558a2d397'; // <-- paste your TMDB key here (free at themoviedb.org)
+const TMDB_KEY = 'a31a9bbd61ad9d66f465457558a2d397';
 const TMDB = 'https://api.themoviedb.org/3';
 const IMG = 'https://image.tmdb.org/t/p/';
 
@@ -392,9 +452,19 @@ let searchTimer = null;
 function toggleMobileMenu() {
   document.getElementById('navLinks').classList.toggle('open');
 }
-
 function closeMobileMenu() {
   document.getElementById('navLinks').classList.remove('open');
+}
+
+// ---- THEME SWITCH ----
+function setTheme(section) {
+  document.body.className = '';
+
+  if (section === 'movies') document.body.classList.add('theme-movies');
+  else if (section === 'tv') document.body.classList.add('theme-tv');
+  else if (section === 'trending') document.body.classList.add('theme-trending');
+  else if (section === 'anime') document.body.classList.add('theme-anime');
+  else document.body.classList.add('theme-home');
 }
 
 // ---- API ----
@@ -406,13 +476,12 @@ async function api(path, params = {}) {
 
 // ---- INIT ----
 window.onload = async () => {
+  setTheme('home');
   loadHero();
   loadRow('trendingRow', '/trending/movie/week');
   loadRow('topRatedRow', '/movie/top_rated');
   loadRow('nowPlayingRow', '/movie/now_playing');
   loadRow('tvRow', '/tv/popular', 'tv');
-
-  // Anime row (TV type in TMDB, filter Animation genre)
   loadAnimeRow();
 };
 
@@ -429,6 +498,7 @@ function setHero(i) {
   heroIndex = i;
   const m = heroItems[i];
   if (!m) return;
+
   document.getElementById('heroBg').style.backgroundImage = `url(${IMG}w1280${m.backdrop_path})`;
   document.getElementById('heroTitle').textContent = m.title || m.name;
   document.getElementById('heroMeta').innerHTML = `
@@ -461,7 +531,7 @@ function cardHTML(m, type='movie') {
   const poster = m.poster_path ? `${IMG}w342${m.poster_path}` : 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 3"><rect fill="%231a1a26" width="2" height="3"/></svg>';
   const rating = m.vote_average ? m.vote_average.toFixed(1) : '';
   return `<div class="card" onclick="openPlayer(${JSON.stringify(m).replace(/"/g,'&quot;')}, '${type}')">
-    <img class="card-poster" src="${poster}" alt="${title}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 2 3%22><rect fill=%22%231a1a26%22 width=%222%22 height=%223%22/></svg>'">
+    <img class="card-poster" src="${poster}" alt="${title}" loading="lazy">
     ${rating ? `<div class="card-rating">⭐ ${rating}</div>` : ''}
     <div class="play-btn-overlay">▶</div>
     <div class="card-overlay">
@@ -471,13 +541,11 @@ function cardHTML(m, type='movie') {
   </div>`;
 }
 
-// ---- ANIME ----
+// ---- ANIME ROW ----
 async function loadAnimeRow() {
   const row = document.getElementById('animeRow');
   row.innerHTML = Array(8).fill(`<div class="card skeleton" style="aspect-ratio:2/3;width:160px;"></div>`).join('');
 
-  // TMDB doesn't have a true "anime" endpoint.
-  // Best method: TV Discover + Animation genre + Japanese origin.
   const d = await api('/discover/tv', {
     with_genres: 16,
     with_original_language: 'ja',
@@ -492,6 +560,7 @@ async function loadAnimeRow() {
 function showSection(sec) {
   currentSection = sec;
   closeMobileMenu();
+  setTheme(sec);
 
   document.getElementById('homePage').style.display = 'none';
   document.getElementById('gridPage').classList.remove('open');
@@ -534,7 +603,6 @@ function showSection(sec) {
       <button class="gtab" onclick="filterAnime('top', this)">Top Rated</button>
       <button class="gtab" onclick="filterAnime('airing', this)">Airing Now</button>
     `;
-    currentGenre = '';
     loadAnimeGrid('popular', 1);
   }
 
@@ -565,37 +633,26 @@ function filterGenre(gid, type, el) {
   loadGrid(path, 1, type);
 }
 
-// ---- ANIME GRID FILTER ----
+// ---- ANIME GRID ----
+let animeMode = 'popular';
+
 function filterAnime(mode, el) {
+  animeMode = mode;
   currentPage = 1;
   document.querySelectorAll('.gtab').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
   loadAnimeGrid(mode, 1);
 }
 
-let currentPath = '';
-let animeMode = 'popular';
-
 async function loadAnimeGrid(mode='popular', page=1) {
-  animeMode = mode;
-  currentPath = 'anime';
-
   const grid = document.getElementById('movieGrid');
   if (page === 1) grid.innerHTML = Array(12).fill(`<div class="skeleton" style="aspect-ratio:2/3;border-radius:10px;"></div>`).join('');
 
-  let params = {
-    page,
-    with_genres: 16,
-    with_original_language: 'ja'
-  };
+  let params = { page, with_genres: 16, with_original_language: 'ja' };
+  let path = '/discover/tv';
 
   if (mode === 'popular') params.sort_by = 'popularity.desc';
   if (mode === 'top') params.sort_by = 'vote_average.desc';
-  if (mode === 'airing') params.sort_by = 'popularity.desc';
-
-  let path = '/discover/tv';
-
-  // Airing now uses a different endpoint
   if (mode === 'airing') {
     path = '/tv/on_the_air';
     params = { page };
@@ -609,6 +666,8 @@ async function loadAnimeGrid(mode='popular', page=1) {
 }
 
 // ---- GRID ----
+let currentPath = '';
+
 async function loadGrid(path, page=1, type='movie', isTrending=false) {
   currentPath = path; 
   currentPage = page;
@@ -634,9 +693,7 @@ function loadMore() {
     return;
   }
 
-  const type = gridType;
-  const path = currentPath;
-  loadGrid(path, currentPage, type, path.includes('trending'));
+  loadGrid(currentPath, currentPage, gridType, currentPath.includes('trending'));
 }
 
 // ---- SEARCH ----
@@ -747,12 +804,12 @@ function closePlayer() {
   document.body.style.overflow = '';
 }
 
-// Close on backdrop click
 document.getElementById('playerModal').addEventListener('click', function(e) {
   if (e.target === this) closePlayer();
 });
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closePlayer(); });
 </script>
+
 </body>
 </html>
