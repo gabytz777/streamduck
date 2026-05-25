@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MangaDuck - Premium Manga Streaming</title>
+  <title>MangaDuck - Premium Manga Reader</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -11,215 +11,145 @@
       --surface: #12121a;
       --surface2: #1a1a26;
       --border: rgba(255, 255, 255, 0.07);
-      --accent: #ffa500;
-      --accent-rgb: 255, 165, 0;
+      --accent: #ff7b2c;
+      --accent-rgb: 255, 123, 44;
       --text: #f0f0f0;
       --muted: #888;
       --radius: 12px;
       --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    body.theme-manga { --accent: #ff7b2c; --accent-rgb: 255, 123, 44; --bg: #0a0604; }
-    body.theme-popular { --accent: #ff3b6f; --accent-rgb: 255, 59, 111; --bg: #0a0408; }
-    body.theme-new { --accent: #3bc9ff; --accent-rgb: 59, 201, 255; --bg: #04080f; }
-    body.theme-seinen { --accent: #22c55e; --accent-rgb: 34, 197, 94; --bg: #050a06; }
-
     * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-    html, body { width: 100%; overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; transition: background 0.5s ease; }
-    button, .btn, .gtab, .nav-btn { appearance: none; -webkit-appearance: none; background: none; border: none; font-family: inherit; cursor: pointer; outline: none; user-select: none; }
+    html, body { width: 100%; overflow-x: hidden; background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; }
+    button, .btn, .gtab, .nav-btn { background: none; border: none; font-family: inherit; cursor: pointer; outline: none; }
 
     .fade-in { animation: fadeIn 0.6s ease forwards; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
     nav {
       position: sticky; top: 0; z-index: 1000;
-      background: rgba(10, 10, 15, 0.7);
-      backdrop-filter: blur(24px) saturate(180%);
-      -webkit-backdrop-filter: blur(24px) saturate(180%);
-      border-bottom: 1px solid rgba(var(--accent-rgb), 0.18);
-      box-shadow: 0 1px 0 rgba(var(--accent-rgb), 0.08), 0 4px 24px rgba(0,0,0,0.35);
-      padding: 0 5%; display: flex; align-items: center; height: 70px; gap: 1.5rem; width: 100%;
-      transition: border-color 0.5s ease, box-shadow 0.5s ease;
+      background: rgba(10, 10, 15, 0.85);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid rgba(var(--accent-rgb), 0.2);
+      padding: 0 5%; display: flex; align-items: center; height: 70px; gap: 1.5rem;
     }
-    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--accent); letter-spacing: 1px; cursor: pointer; white-space: nowrap; transition: color 0.5s ease; }
+    .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; color: var(--accent); cursor: pointer; }
     .nav-links { display: flex; gap: 0.25rem; }
-    .nav-btn { color: var(--muted); font-size: 0.9rem; font-weight: 500; padding: 8px 12px; border-radius: 8px; transition: var(--transition); }
+    .nav-btn { color: var(--muted); font-size: 0.9rem; font-weight: 500; padding: 8px 12px; border-radius: 8px; }
     .nav-btn:hover, .nav-btn.active { color: var(--text); background: rgba(255,255,255,0.06); }
     .nav-btn.active { color: var(--accent); }
 
     .search-wrap { margin-left: auto; position: relative; max-width: 280px; width: 100%; }
-    #searchInput { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--text); font-family: inherit; font-size: 0.85rem; padding: 10px 12px 10px 38px; border-radius: 10px; width: 100%; outline: none; transition: var(--transition); }
-    #searchInput:focus { border-color: var(--accent); background: rgba(255,255,255,0.09); }
-    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; font-size: 0.9rem; }
+    #searchInput { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); color: var(--text); padding: 10px 12px 10px 38px; border-radius: 10px; width: 100%; }
+    #searchInput:focus { border-color: var(--accent); }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); }
     .mobile-menu-btn { display: none; color: var(--text); font-size: 1.5rem; }
 
-    .btn { font-weight: 600; font-size: 0.9rem; padding: 10px 20px; border-radius: 10px; transition: var(--transition); display: flex; align-items: center; gap: 8px; justify-content: center; width: fit-content; }
+    .btn { font-weight: 600; font-size: 0.9rem; padding: 10px 20px; border-radius: 10px; display: flex; align-items: center; gap: 8px; width: fit-content; }
     .btn-primary { background: var(--accent); color: #000; }
-    .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
-    .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; backdrop-filter: blur(10px); }
-    .btn-secondary:hover { background: rgba(255,255,255,0.2); }
+    .btn-secondary { background: rgba(255,255,255,0.1); color: #fff; }
 
-    #hero { position: relative; height: 65vh; min-height: 380px; overflow: hidden; display: flex; align-items: flex-end; width: 92%; margin: 1rem auto; border-radius: 20px; }
-    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center 20%; transition: background-image 0.8s ease-in-out, transform 1.2s ease-out; transform: scale(1.05); }
-    #hero.active .hero-bg { transform: scale(1); }
+    #hero {
+      position: relative; height: 60vh; min-height: 400px; overflow: hidden;
+      width: 92%; margin: 1rem auto; border-radius: 20px;
+    }
+    .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; transition: all 0.8s ease; }
     .hero-fade {
       position: absolute; inset: 0;
-      background:
-        linear-gradient(to top, var(--bg) 5%, rgba(10,10,15,0.4) 50%, transparent 100%),
-        linear-gradient(to right, var(--bg) 0%, rgba(10,10,15,0.6) 45%, transparent 75%);
+      background: linear-gradient(to top, var(--bg) 5%, rgba(0,0,0,0.4) 50%, transparent 100%),
+                  linear-gradient(to right, var(--bg) 0%, rgba(0,0,0,0.5) 45%, transparent 75%);
     }
-    .hero-content { position: relative; padding: 0 5% 2.5rem; max-width: 800px; z-index: 2; width: 100%; }
-    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--accent); color: #000; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; padding: 5px 10px; border-radius: 5px; margin-bottom: 0.8rem; }
-    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 7vw, 3.8rem); line-height: 0.95; margin-bottom: 0.8rem; }
-    .hero-meta { font-size: 0.95rem; color: #eee; margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-    .hero-overview { font-size: 1rem; line-height: 1.5; color: #ddd; margin-bottom: 1.5rem; max-width: 550px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .hero-overview.expanded { -webkit-line-clamp: unset; }
-    .hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-    .hero-dots { position: absolute; bottom: 1.5rem; right: 5%; display: flex; gap: 8px; z-index: 10; }
-    .hdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: var(--transition); cursor: pointer; }
+    .hero-content { position: relative; padding: 0 5% 2rem; max-width: 700px; z-index: 2; bottom: 0; position: absolute; bottom: 20px; }
+    .hero-badge { background: var(--accent); color: #000; font-size: 0.7rem; font-weight: 700; padding: 4px 10px; border-radius: 5px; display: inline-block; margin-bottom: 0.8rem; }
+    .hero-title { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 6vw, 3.5rem); line-height: 1; }
+    .hero-meta { font-size: 0.9rem; color: #ddd; margin: 0.5rem 0; display: flex; gap: 1rem; }
+    .hero-overview { font-size: 0.95rem; color: #ccc; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 500px; }
+    .hero-dots { position: absolute; bottom: 1rem; right: 2rem; display: flex; gap: 8px; z-index: 10; }
+    .hdot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; }
     .hdot.active { background: var(--accent); width: 24px; border-radius: 3px; }
 
     .shuffler-break {
-      width: 92%; margin: 2.5rem auto;
-      background: linear-gradient(90deg, var(--surface) 0%, var(--surface2) 100%);
+      width: 92%; margin: 2rem auto;
+      background: linear-gradient(135deg, var(--surface), var(--surface2));
       border: 1px solid var(--border); border-radius: 20px;
-      padding: 2rem; display: flex; align-items: center; gap: 3rem;
-      position: relative; overflow: hidden;
+      padding: 2rem; display: flex; align-items: center; gap: 2rem;
     }
-    .shuffler-break::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at top right, rgba(var(--accent-rgb), 0.1), transparent 70%); pointer-events: none; }
-    .shuffler-text { flex: 1; z-index: 1; }
-    .shuffler-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; margin-bottom: 0.4rem; letter-spacing: 1px; }
-    .shuffler-desc { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.2rem; }
-    .shuffler-display { display: flex; align-items: center; gap: 2rem; z-index: 1; }
-    .shuffler-card-wrap { width: 120px; aspect-ratio: 2/3; position: relative; perspective: 1000px; flex-shrink: 0; }
-    .shuffler-card { width: 100%; height: 100%; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); overflow: hidden; transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-    .shuffler-card img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.5s ease; }
-    .shuffler-card.spinning { animation: spinCard 0.8s infinite linear; }
-    @keyframes spinCard { 0% { transform: rotateY(0deg) scale(0.9); } 50% { transform: rotateY(180deg) scale(0.8); } 100% { transform: rotateY(360deg) scale(0.9); } }
-    .shuffler-info { display: none; opacity: 0; transform: translateX(10px); transition: 0.4s ease; min-width: 200px; }
-    .shuffler-info.visible { display: block; opacity: 1; transform: translateX(0); }
-    .shuffler-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .shuffler-btns { display: flex; gap: 10px; }
+    .shuffler-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; }
+    .shuffler-desc { color: var(--muted); margin: 0.5rem 0 1rem; }
+    .shuffler-display { display: flex; align-items: center; gap: 1.5rem; }
+    .shuffler-card-wrap { width: 110px; aspect-ratio: 2/3; border-radius: 10px; overflow: hidden; background: var(--surface2); }
+    .shuffler-card img { width: 100%; height: 100%; object-fit: cover; }
+    .shuffler-card.spinning { animation: spin 0.6s infinite linear; }
+    @keyframes spin { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+    .shuffler-info { display: none; }
+    .shuffler-info.visible { display: block; }
+    .shuffler-name { font-weight: 700; margin-bottom: 1rem; }
 
-    .section { padding: 2rem 5% 1rem; width: 100%; }
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem; gap: 1rem; }
-    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px; }
-
-    .see-all {
-      color: var(--accent);
-      font-size: 0.82rem;
-      font-weight: 700;
-      cursor: pointer;
-      white-space: nowrap;
-      padding: 6px 14px;
-      border-radius: 20px;
-      border: 1px solid rgba(var(--accent-rgb), 0.35);
-      background: rgba(var(--accent-rgb), 0.08);
-      transition: var(--transition);
-      letter-spacing: 0.3px;
-    }
-    .see-all:hover { background: rgba(var(--accent-rgb), 0.18); border-color: var(--accent); transform: translateX(2px); }
-
+    .section { padding: 2rem 5% 0.5rem; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .section-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; }
+    .see-all { color: var(--accent); font-size: 0.8rem; cursor: pointer; padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(var(--accent-rgb), 0.3); }
     .scroll-row { display: flex; gap: 16px; overflow-x: auto; padding: 4px 0 16px; scrollbar-width: none; }
     .scroll-row::-webkit-scrollbar { display: none; }
+    .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
 
-    .genre-tabs { display: flex; gap: 0.6rem; overflow-x: auto; padding-bottom: 1rem; scrollbar-width: none; }
-    .gtab { background: var(--surface); border: 1px solid var(--border); color: var(--muted); font-size: 0.85rem; white-space: nowrap; padding: 8px 16px; border-radius: 100px; transition: var(--transition); }
-    .gtab:hover, .gtab.active { background: var(--accent); color: #000; font-weight: 600; border-color: var(--accent); }
-
-    .card { flex: 0 0 160px; width: 160px; position: relative; border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: var(--transition); background: var(--surface2); }
-    .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.4); }
-    .card-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; display: block; }
-    .card-overlay { position: absolute; inset: 0; padding: 1rem; display: flex; flex-direction: column; justify-content: flex-end; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 60%); opacity: 0; transition: var(--transition); }
-    .card:hover .card-overlay { opacity: 1; }
-    .card-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 2px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-    .card-year { font-size: 0.8rem; color: var(--muted); }
-    .card-rating { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: var(--accent); font-size: 0.75rem; font-weight: 700; padding: 3px 6px; border-radius: 5px; backdrop-filter: blur(4px); border: 1px solid rgba(var(--accent-rgb), 0.3); }
-
-    .movie-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; width: 100%; }
+    .card { flex: 0 0 150px; width: 150px; border-radius: var(--radius); overflow: hidden; cursor: pointer; background: var(--surface2); transition: transform 0.2s; }
+    .card:hover { transform: translateY(-5px); }
+    .card-poster { width: 100%; aspect-ratio: 2/3; object-fit: cover; }
+    .card-overlay { padding: 0.5rem; background: linear-gradient(to top, #000, transparent); margin-top: -50px; position: relative; }
+    .card-title { font-size: 0.8rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .card-rating { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.7); padding: 2px 6px; border-radius: 5px; font-size: 0.7rem; color: gold; }
 
     #readerModal {
-      display: none; position: fixed; inset: 0; z-index: 2000; background: #000; padding: 0; overflow-y: auto;
+      display: none; position: fixed; inset: 0; z-index: 2000; background: #000; overflow-y: auto;
     }
     #readerModal.open { display: block; }
     .reader-header {
-      position: sticky; top: 0; z-index: 2010;
-      background: rgba(0,0,0,0.95); backdrop-filter: blur(16px);
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 20px; border-bottom: 1px solid rgba(255,255,255,0.1);
-      flex-wrap: wrap;
-      gap: 10px;
+      position: sticky; top: 0; background: #111; padding: 12px 20px;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+      border-bottom: 1px solid #333; z-index: 10;
     }
-    .chapter-nav { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .chapter-btn { background: rgba(var(--accent-rgb), 0.2); border: 1px solid rgba(var(--accent-rgb), 0.4); color: #fff; font-size: 0.75rem; padding: 6px 12px; border-radius: 20px; cursor: pointer; transition: 0.2s; }
-    .chapter-btn:hover { background: rgba(var(--accent-rgb), 0.4); }
-    .chapter-select { background: #111; border: 1px solid #333; color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 0.8rem; }
+    .chapter-nav { display: flex; gap: 10px; align-items: center; }
+    .chapter-btn { background: #222; border: 1px solid #444; color: #fff; padding: 5px 12px; border-radius: 20px; cursor: pointer; }
+    .chapter-select { background: #111; border: 1px solid #333; color: #fff; padding: 5px 10px; border-radius: 8px; }
     .reader-img-container { max-width: 900px; margin: 20px auto; text-align: center; }
-    .reader-img { width: 100%; height: auto; display: block; margin-bottom: 8px; border-radius: 4px; }
-    .close-reader { background: rgba(255,255,255,0.1); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
-    
-    /* Progress bar */
-    .progress-container {
-      position: fixed; top: 70px; left: 0; width: 100%; height: 3px; background: rgba(255,255,255,0.1); z-index: 1001;
-    }
-    .progress-fill {
-      height: 100%; width: 0%; background: var(--accent); transition: width 0.1s linear;
-    }
-    
-    /* History panel */
-    .history-panel {
-      position: fixed; bottom: 20px; right: 20px; z-index: 1500;
-    }
-    .history-toggle {
-      background: var(--accent); color: #000; width: 48px; height: 48px; border-radius: 50%;
-      display: flex; align-items: center; justify-content: center; cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4); font-size: 1.4rem;
-    }
-    .history-dropdown {
-      position: absolute; bottom: 60px; right: 0; width: 280px; max-height: 400px; overflow-y: auto;
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      padding: 12px; display: none; flex-direction: column; gap: 10px;
-    }
-    .history-dropdown.open { display: flex; }
-    .history-item {
-      display: flex; gap: 12px; cursor: pointer; padding: 8px; border-radius: 8px;
-      background: var(--surface2); transition: 0.2s;
-    }
-    .history-item:hover { background: rgba(var(--accent-rgb), 0.2); }
-    .history-img { width: 40px; height: 60px; object-fit: cover; border-radius: 6px; }
-    .history-info { flex: 1; }
-    .history-title { font-size: 0.85rem; font-weight: 600; }
-    .history-chapter { font-size: 0.7rem; color: var(--muted); }
-    .history-time { font-size: 0.65rem; color: var(--accent); }
+    .reader-img { width: 100%; margin-bottom: 5px; border-radius: 4px; }
+    .close-reader { background: rgba(255,255,255,0.1); width: 40px; height: 40px; border-radius: 50%; color: #fff; font-size: 1.2rem; }
 
-    footer { padding: 3rem 5%; text-align: center; border-top: 1px solid var(--border); margin-top: 3rem; color: var(--muted); font-size: 0.85rem; width: 100%; }
+    .progress-container { position: fixed; top: 70px; left: 0; width: 100%; height: 3px; background: #333; z-index: 1001; display: none; }
+    .progress-fill { height: 100%; width: 0%; background: var(--accent); }
+    .history-panel { position: fixed; bottom: 20px; right: 20px; z-index: 1500; }
+    .history-toggle { background: var(--accent); color: #000; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.3rem; }
+    .history-dropdown { position: absolute; bottom: 60px; right: 0; width: 280px; max-height: 400px; overflow-y: auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 12px; display: none; }
+    .history-dropdown.open { display: block; }
+    .history-item { display: flex; gap: 10px; padding: 8px; cursor: pointer; border-radius: 8px; margin-bottom: 5px; background: var(--surface2); }
+    .history-item:hover { background: rgba(var(--accent-rgb), 0.2); }
+    .history-img { width: 40px; height: 56px; object-fit: cover; border-radius: 5px; }
+    .history-title { font-size: 0.8rem; font-weight: 600; }
+    .history-chapter { font-size: 0.65rem; color: var(--accent); }
 
     @media (max-width: 768px) {
-      .shuffler-break { flex-direction: column; gap: 1.5rem; text-align: center; width: 95%; padding: 1.5rem; }
-      .shuffler-display { flex-direction: column; gap: 1.5rem; }
+      .shuffler-break { flex-direction: column; text-align: center; }
+      .shuffler-display { flex-direction: column; }
       .nav-links { display: none; }
-      .nav-links.mobile-open { display: flex; position: absolute; top: 70px; left: 0; right: 0; flex-direction: column; background: rgba(10,10,15,0.95); backdrop-filter: blur(20px); padding: 1rem; border-bottom: 1px solid rgba(var(--accent-rgb), 0.18); }
+      .nav-links.mobile-open { display: flex; flex-direction: column; position: absolute; top: 70px; left: 0; right: 0; background: #0a0a0f; padding: 1rem; }
       .mobile-menu-btn { display: block; }
       .search-wrap { display: none; }
-      .search-wrap.active { display: block; position: absolute; top: 70px; left: 0; right: 0; background: rgba(10,10,15,0.95); padding: 10px 4%; z-index: 999; }
-      nav { height: 60px; justify-content: space-between; }
-      .progress-container { top: 60px; }
+      .search-wrap.active { display: block; position: absolute; top: 70px; left: 0; right: 0; background: #0a0a0f; padding: 10px; z-index: 999; }
     }
   </style>
 </head>
-<body class="theme-manga">
+<body>
 
-<div class="progress-container" id="progressContainer" style="display: none;">
-  <div class="progress-fill" id="progressFill"></div>
-</div>
+<div class="progress-container" id="progressContainer"><div class="progress-fill" id="progressFill"></div></div>
 
 <nav>
   <div class="logo" onclick="Router.go('home')">🐥 MangaDuck</div>
   <div class="nav-links" id="navLinks">
     <button class="nav-btn" data-sec="home" onclick="Router.go('home')">Home</button>
     <button class="nav-btn" data-sec="popular" onclick="Router.go('popular')">Popular</button>
-    <button class="nav-btn" data-sec="new" onclick="Router.go('new')">New</button>
-    <button class="nav-btn" data-sec="seinen" onclick="Router.go('seinen')">Seinen</button>
+    <button class="nav-btn" data-sec="top" onclick="Router.go('top')">Top Rated</button>
+    <button class="nav-btn" data-sec="search" onclick="Router.go('search')">Search</button>
   </div>
   <div class="search-wrap" id="searchWrap">
     <span class="search-icon">🔍</span>
@@ -235,135 +165,33 @@
 
 <div class="history-panel">
   <div class="history-toggle" onclick="UI.toggleHistory()">📚</div>
-  <div class="history-dropdown" id="historyDropdown">
-    <div style="font-size: 0.8rem; font-weight: bold; margin-bottom: 5px;">📖 Reading History</div>
-    <div id="historyList"></div>
-  </div>
+  <div class="history-dropdown" id="historyDropdown"><div id="historyList"></div></div>
 </div>
 
 <template id="home-tpl">
-  <div id="hero" class="fade-in">
-    <div class="hero-bg" id="heroBg"></div>
-    <div class="hero-fade"></div>
-    <div class="hero-content">
-      <div class="hero-badge">✨ Featured Manga</div>
-      <h1 class="hero-title" id="heroTitle">...</h1>
-      <div class="hero-meta" id="heroMeta"></div>
-      <p class="hero-overview" id="heroOverview"></p>
-      <div class="hero-actions">
-        <button class="btn btn-primary" id="heroReadBtn">📖 Read Now</button>
-        <button class="btn btn-secondary" id="heroInfoBtn" onclick="UI.expandDesc()">More Info</button>
-      </div>
-    </div>
-    <div class="hero-dots" id="heroDots"></div>
-  </div>
-
-  <div class="section fade-in">
-    <div class="section-header"><h2 class="section-title">🔥 Trending Manga</h2><a class="see-all" onclick="Router.go('popular')">See All →</a></div>
-    <div class="scroll-row" id="trendingRow"></div>
-  </div>
-
-  <div class="shuffler-break fade-in">
-    <div class="shuffler-text">
-      <h2 class="shuffler-title">Stuck on what to read?</h2>
-      <p class="shuffler-desc">Let the Duck pick your next manga.</p>
-      <button class="btn btn-primary" id="shuffleInitBtn" onclick="App.shuffle()">🎲 Spin the Wheel</button>
-    </div>
-    <div class="shuffler-display">
-      <div class="shuffler-card-wrap">
-        <div class="shuffler-card" id="shuffleCard"><img src="" id="shuffleImg"></div>
-      </div>
-      <div class="shuffler-info" id="shuffleInfo">
-        <div class="shuffler-name" id="shuffleName">???</div>
-        <div class="shuffler-btns">
-          <button class="btn btn-primary" id="shuffleReadBtn">📖 Read</button>
-          <button class="btn btn-secondary" onclick="App.shuffle()" style="padding: 10px; width: 44px;">🔄</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section fade-in">
-    <div class="section-header"><h2 class="section-title">📘 New Updates</h2><a class="see-all" onclick="Router.go('new')">See All →</a></div>
-    <div class="scroll-row" id="newRow"></div>
-  </div>
-  <div class="section fade-in">
-    <div class="section-header"><h2 class="section-title">⚔️ Seinen</h2><a class="see-all" onclick="Router.go('seinen')">See All →</a></div>
-    <div class="scroll-row" id="seinenRow"></div>
-  </div>
+  <div id="hero"><div class="hero-bg" id="heroBg"></div><div class="hero-fade"></div><div class="hero-content"><div class="hero-badge">✨ FEATURED</div><h1 class="hero-title" id="heroTitle">-</h1><div class="hero-meta" id="heroMeta"></div><p class="hero-overview" id="heroOverview"></p><button class="btn btn-primary" id="heroReadBtn">📖 Read Now</button></div><div class="hero-dots" id="heroDots"></div></div>
+  <div class="section"><div class="section-header"><h2 class="section-title">🔥 Trending Now</h2><a class="see-all" onclick="Router.go('popular')">See All →</a></div><div class="scroll-row" id="trendingRow"></div></div>
+  <div class="shuffler-break"><div class="shuffler-text"><h2 class="shuffler-title">🎲 Feeling Lucky?</h2><p class="shuffler-desc">Let the Duck pick your next read.</p><button class="btn btn-primary" id="shuffleBtn">Spin the Wheel</button></div><div class="shuffler-display"><div class="shuffler-card-wrap"><div class="shuffler-card" id="shuffleCard"><img src="" id="shuffleImg"></div></div><div class="shuffler-info" id="shuffleInfo"><div class="shuffler-name" id="shuffleName"></div><button class="btn btn-primary" id="shuffleReadBtn">📖 Read</button></div></div></div>
+  <div class="section"><div class="section-header"><h2 class="section-title">⭐ Top Rated All Time</h2><a class="see-all" onclick="Router.go('top')">See All →</a></div><div class="scroll-row" id="topRow"></div></div>
 </template>
 
-<template id="grid-tpl">
-  <div class="section fade-in">
-    <h1 id="gridTitle" class="section-title" style="font-size: 2.2rem; margin-bottom: 1rem;"></h1>
-    <div class="genre-tabs" id="genreTabs"></div>
-    <div class="movie-grid" id="movieGrid"></div>
-    <div style="text-align: center; margin-top: 3rem;"><button class="btn btn-secondary" style="margin: 0 auto;" onclick="App.loadMore()">Load More</button></div>
-  </div>
-</template>
+<template id="grid-tpl"><div class="section"><h1 id="gridTitle" class="section-title"></h1><div class="movie-grid" id="movieGrid"></div><div style="text-align:center; margin:2rem"><button class="btn btn-secondary" onclick="App.loadMore()">Load More</button></div></div></template>
 
-<template id="search-tpl">
-  <div class="section fade-in">
-    <h1 id="searchTitle" class="section-title" style="margin-bottom: 1.5rem;"></h1>
-    <div class="movie-grid" id="searchGrid"></div>
-  </div>
-</template>
+<div id="readerModal"><div class="reader-header"><div><strong id="readerMangaTitle"></strong> — <span id="readerChapterLabel"></span></div><div class="chapter-nav"><button class="chapter-btn" id="prevChapterBtn">◀ Prev</button><select id="chapterSelect" class="chapter-select"></select><button class="chapter-btn" id="nextChapterBtn">Next ▶</button></div><button class="close-reader" onclick="UI.closeReader()">✕</button></div><div id="readerPages" class="reader-img-container"></div></div>
 
-<div id="readerModal">
-  <div class="reader-header">
-    <div><strong id="readerMangaTitle"></strong> — <span id="readerChapterLabel"></span></div>
-    <div class="chapter-nav">
-      <button class="chapter-btn" id="prevChapterBtn">◀ Prev</button>
-      <select id="chapterSelect" class="chapter-select"></select>
-      <button class="chapter-btn" id="nextChapterBtn">Next ▶</button>
-    </div>
-    <button class="close-reader" onclick="UI.closeReader()">✕</button>
-  </div>
-  <div id="readerPages" class="reader-img-container"></div>
-</div>
-
-<footer><p>MangaDuck © 2026 | Data provided by MangaDex</p></footer>
+<footer style="padding:2rem;text-align:center;color:#666"><p>MangaDuck © 2026 | Data: Jikan API (MyAnimeList) + Comick API</p></footer>
 
 <script>
-const MD_API = 'https://api.mangadex.org';
-const MD_IMG = 'https://uploads.mangadex.org';
+// ============================================
+// JIKAN API (MyAnimeList) - WORKS, NO CORS
+// ============================================
+const JIKAN_API = 'https://api.jikan.moe/v4';
+const COMICK_API = 'https://comick-source-api.notaspider.dev';
 
-const History = {
-  add(mangaId, mangaTitle, chapterNum, coverUrl) {
-    const history = JSON.parse(localStorage.getItem('mangaHistory') || '[]');
-    const existing = history.findIndex(h => h.mangaId === mangaId);
-    const entry = { mangaId, mangaTitle, chapterNum, coverUrl, timestamp: Date.now() };
-    if (existing !== -1) history.splice(existing, 1);
-    history.unshift(entry);
-    localStorage.setItem('mangaHistory', JSON.stringify(history.slice(0, 20)));
-    UI.renderHistory();
-  },
-  get() { return JSON.parse(localStorage.getItem('mangaHistory') || '[]'); },
-  clear() { localStorage.removeItem('mangaHistory'); UI.renderHistory(); }
-};
-
-const Progress = {
-  save(mangaId, chapterId, scrollPercent) {
-    const key = `progress_${mangaId}_${chapterId}`;
-    localStorage.setItem(key, scrollPercent.toString());
-  },
-  get(mangaId, chapterId) {
-    const key = `progress_${mangaId}_${chapterId}`;
-    return parseFloat(localStorage.getItem(key)) || 0;
-  },
-  updateBar(percent) {
-    const bar = document.getElementById('progressFill');
-    if (bar) bar.style.width = `${percent}%`;
-  },
-  show() { document.getElementById('progressContainer').style.display = 'block'; },
-  hide() { document.getElementById('progressContainer').style.display = 'none'; }
-};
-
+// State
 const State = {
   currentSection: 'home',
   currentPage: 1,
-  currentGenre: '',
-  gridType: 'manga',
   heroItems: [],
   heroIndex: 0,
   heroTimer: null,
@@ -374,358 +202,317 @@ const State = {
   currentManga: null,
   currentChapters: [],
   currentChapterIndex: 0,
-  chapterPages: [],
-  searchTimer: null,
-  currentMangaId: null,
-  currentChapterId: null
+  currentMalId: null,
+  searchTimer: null
 };
 
-const MangaAPI = {
-  async fetch(endpoint, params = {}) {
-    const url = new URL(`${MD_API}${endpoint}`);
-    Object.entries(params).forEach(([k,v]) => url.searchParams.append(k, v));
-    const res = await fetch(url);
-    return res.json();
+// History
+const History = {
+  add(malId, title, chapter, cover) {
+    let hist = JSON.parse(localStorage.getItem('mangaHistory') || '[]');
+    hist = hist.filter(h => h.malId !== malId);
+    hist.unshift({ malId, title, chapter, cover, time: Date.now() });
+    localStorage.setItem('mangaHistory', JSON.stringify(hist.slice(0, 20)));
+    UI.renderHistory();
   },
-  getCoverUrl(mangaId, coverFile) {
-    if (!coverFile) return '';
-    return `${MD_IMG}/covers/${mangaId}/${coverFile}.256.jpg`;
-  },
-  async getMangaList(orderBy = 'followedCount', limit = 20, offset = 0, includedTags = null) {
-    const params = { limit, offset, 'order[followedCount]': 'desc', 'includes[]': ['cover_art'] };
-    if (includedTags) params['includedTags[]'] = includedTags;
-    const data = await this.fetch('/manga', params);
+  get() { return JSON.parse(localStorage.getItem('mangaHistory') || '[]'); },
+  renderHistory() { /* in UI */ }
+};
+
+// Progress
+const Progress = {
+  save(malId, chapterId, percent) { localStorage.setItem(`prog_${malId}_${chapterId}`, percent); },
+  get(malId, chapterId) { return parseFloat(localStorage.getItem(`prog_${malId}_${chapterId}`)) || 0; },
+  update(percent) { document.getElementById('progressFill').style.width = `${percent}%`; },
+  show() { document.getElementById('progressContainer').style.display = 'block'; },
+  hide() { document.getElementById('progressContainer').style.display = 'none'; }
+};
+
+// Jikan API calls
+const Jikan = {
+  async getTrending(limit = 20) {
+    const res = await fetch(`${JIKAN_API}/top/manga?filter=bypopularity&limit=${limit}`);
+    const data = await res.json();
     return data.data || [];
   },
-  async searchManga(title, limit = 20, offset = 0) {
-    const data = await this.fetch('/manga', { title, limit, offset, 'includes[]': ['cover_art'] });
+  async getTopRated(limit = 20) {
+    const res = await fetch(`${JIKAN_API}/top/manga?filter=rating&limit=${limit}`);
+    const data = await res.json();
+    return data.data || [];
+  },
+  async search(query, limit = 30) {
+    const res = await fetch(`${JIKAN_API}/manga?q=${encodeURIComponent(query)}&limit=${limit}`);
+    const data = await res.json();
     return data.data || [];
   },
   async getMangaById(id) {
-    const data = await this.fetch(`/manga/${id}`, { 'includes[]': ['cover_art', 'author', 'artist'] });
+    const res = await fetch(`${JIKAN_API}/manga/${id}/full`);
+    const data = await res.json();
     return data.data;
   },
-  async getChapters(mangaId, limit = 500) {
-    const data = await this.fetch(`/manga/${mangaId}/feed`, {
-      'translatedLanguage[]': ['en'],
-      'order[chapter]': 'desc',
-      limit,
-      'includes[]': ['scanlation_group']
-    });
-    return (data.data || []).filter(ch => ch.attributes.chapter && !isNaN(parseFloat(ch.attributes.chapter))).sort((a,b) => parseFloat(b.attributes.chapter) - parseFloat(a.attributes.chapter));
-  },
-  async getChapterPages(chapterId) {
-    const data = await this.fetch(`/at-home/server/${chapterId}`);
-    if (data.chapter && data.baseUrl) {
-      const hash = data.chapter.hash;
-      const pages = data.chapter.data || [];
-      return pages.map(p => `${data.baseUrl}/data/${hash}/${p}`);
-    }
-    return [];
+  getCoverUrl(manga) {
+    return manga.images?.jpg?.large_image_url || manga.images?.jpg?.image_url || '';
   }
 };
 
-const Router = {
-  go(section) {
-    State.currentSection = section;
-    State.currentPage = 1;
-    State.currentGenre = '';
-    if (section !== 'home') {
-      clearInterval(State.heroTimer);
-      State.heroTimer = null;
-      clearInterval(State.idleTimer);
-      State.idleTimer = null;
+// Comick API for chapters (working source)
+const Comick = {
+  async getChapters(title, malId) {
+    // Search Comick for the manga first
+    const searchRes = await fetch(`${COMICK_API}/api/search`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: title, source: 'all' })
+    });
+    const searchData = await searchRes.json();
+    if (!searchData.results || searchData.results.length === 0) return [];
+    
+    // Get first result's chapter list
+    const mangaUrl = searchData.results[0].url;
+    const chapterRes = await fetch(`${COMICK_API}/api/chapters`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url: mangaUrl, source: 'mangaread' })
+    });
+    const chapterData = await chapterRes.json();
+    return chapterData.chapters || [];
+  },
+  async getChapterPages(chapterUrl) {
+    // For actual page images, we'd need to fetch the chapter page
+    // Many sources don't expose raw images directly via API
+    // Fallback to using chapter URL scraping via proxy
+    const proxyRes = await fetch(`${COMICK_API}/api/proxy/html?url=${encodeURIComponent(chapterUrl)}`);
+    const html = await proxyRes.text();
+    // Simple image extraction from HTML
+    const imgMatches = html.match(/<img[^>]+src="([^"]+)"[^>]*>/gi) || [];
+    const images = [];
+    for (const img of imgMatches) {
+      const srcMatch = img.match(/src="([^"]+)"/);
+      if (srcMatch && srcMatch[1].includes('.jpg') || srcMatch[1].includes('.png')) {
+        images.push(srcMatch[1]);
+      }
     }
-    UI.updateNav(section);
-    UI.setTheme(section);
-    UI.renderSection(section);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.getElementById('searchWrap')?.classList.remove('active');
+    return images;
+  }
+};
+
+// Alternative direct image source using external manga sites
+const ExternalReader = {
+  // Use MangaSee123 or MangaKakalot direct embed
+  getReadUrl(malId, chapterNum) {
+    // MangaSee uses manga ID mappings - we'll use a search-based approach
+    return `https://mangasee123.com/search?name=${encodeURIComponent(State.currentManga?.title)}`;
   }
 };
 
 const UI = {
   app: document.getElementById('app'),
-  setTheme(section) { document.body.className = `theme-${section}`; },
-  updateNav(section) {
-    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.sec === section));
-    document.getElementById('navLinks')?.classList.remove('mobile-open');
-  },
-  toggleMobileMenu() { document.getElementById('navLinks')?.classList.toggle('mobile-open'); },
-  toggleSearch() { document.getElementById('searchWrap')?.classList.toggle('active'); },
-  toggleHistory() { document.getElementById('historyDropdown').classList.toggle('open'); },
+  
   renderHistory() {
     const history = History.get();
     const container = document.getElementById('historyList');
     if (!container) return;
-    if (history.length === 0) { container.innerHTML = '<div style="color: #666; text-align: center;">No reading history</div>'; return; }
+    if (history.length === 0) { container.innerHTML = '<div style="color:#666;text-align:center">No history</div>'; return; }
     container.innerHTML = history.map(h => `
-      <div class="history-item" onclick="App.resumeReading('${h.mangaId}', ${h.chapterNum})">
-        <img class="history-img" src="${h.coverUrl}" onerror="this.src='https://via.placeholder.com/40x60?text=No+Img'">
-        <div class="history-info">
-          <div class="history-title">${h.mangaTitle}</div>
-          <div class="history-chapter">Chapter ${h.chapterNum}</div>
-          <div class="history-time">${new Date(h.timestamp).toLocaleDateString()}</div>
-        </div>
+      <div class="history-item" onclick="App.resumeReading(${h.malId})">
+        <img class="history-img" src="${h.cover}" onerror="this.src='https://via.placeholder.com/40x56'">
+        <div><div class="history-title">${h.title}</div><div class="history-chapter">Chapter ${h.chapter}</div></div>
       </div>
     `).join('');
   },
+  
+  toggleHistory() { document.getElementById('historyDropdown').classList.toggle('open'); },
+  toggleSearch() { document.getElementById('searchWrap').classList.toggle('active'); },
+  toggleMobileMenu() { document.getElementById('navLinks').classList.toggle('mobile-open'); },
+  
+  updateNav(section) {
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.sec === section));
+  },
+  
   renderSection(section) {
-    const tpl = document.getElementById(`${section === 'home' ? 'home' : (section === 'search' ? 'search' : 'grid')}-tpl`);
+    const tpl = document.getElementById(section === 'home' ? 'home-tpl' : 'grid-tpl');
     this.app.innerHTML = '';
     this.app.appendChild(tpl.content.cloneNode(true));
     if (section === 'home') App.initHome();
-    else if (section === 'popular') App.initGrid('popular', 'Popular Manga', 'followedCount');
-    else if (section === 'new') App.initGrid('new', 'Latest Manga', 'createdAt');
-    else if (section === 'seinen') App.initGrid('seinen', 'Seinen Manga', 'followedCount', ['a9e734ca-9b9d-4d7a-82b3-bc29e6d4e93d']);
+    else if (section === 'popular') App.initGrid('Popular Manga', Jikan.getTrending);
+    else if (section === 'top') App.initGrid('Top Rated Manga', Jikan.getTopRated);
+    else if (section === 'search') {
+      document.getElementById('gridTitle').innerText = 'Search Results';
+      document.getElementById('movieGrid').innerHTML = '<div style="text-align:center;padding:2rem">Enter a search term above 🔍</div>';
+    }
     this.renderHistory();
   },
+  
   createCard(manga) {
-    const rel = manga.relationships || [];
-    const cover = rel.find(r => r.type === 'cover_art');
-    const coverUrl = cover ? MangaAPI.getCoverUrl(manga.id, cover.attributes.fileName) : '';
-    const title = manga.attributes.title?.en || Object.values(manga.attributes.title || {})[0] || 'Unknown';
-    const year = manga.attributes.year || 'N/A';
-    const rating = manga.attributes?.rating?.bayesian || 0;
     const card = document.createElement('div');
     card.className = 'card fade-in';
-    card.innerHTML = `
-      <img class="card-poster" src="${coverUrl}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/500x750?text=${encodeURIComponent(title.slice(0,20))}'">
-      <div class="card-rating">⭐ ${rating ? rating.toFixed(1) : 'N/A'}</div>
-      <div class="card-overlay"><div class="card-title">${title}</div><div class="card-year">${year}</div></div>
-    `;
+    const title = manga.title || 'Unknown';
+    const score = manga.score || 'N/A';
+    const cover = Jikan.getCoverUrl(manga);
+    card.innerHTML = `<img class="card-poster" src="${cover}" onerror="this.src='https://via.placeholder.com/150x225?text=${encodeURIComponent(title.slice(0,10))}'"><div class="card-rating">⭐ ${score}</div><div class="card-overlay"><div class="card-title">${title}</div></div>`;
     card.onclick = () => App.openManga(manga);
     return card;
   },
-  expandDesc() {
-    const descEl = document.getElementById('heroOverview');
-    if (descEl) descEl.classList.toggle('expanded');
-  },
-  openReader(manga, chapters, startIndex = 0) {
+  
+  openReader(manga, chapters, startIdx) {
     State.currentManga = manga;
     State.currentChapters = chapters;
-    State.currentChapterIndex = startIndex;
-    State.currentMangaId = manga.id;
-    const title = manga.attributes.title?.en || Object.values(manga.attributes.title || {})[0] || 'Manga';
-    document.getElementById('readerMangaTitle').innerText = title;
-    Progress.show();
-    this.loadChapterPages();
+    State.currentChapterIndex = startIdx;
+    State.currentMalId = manga.mal_id;
+    document.getElementById('readerMangaTitle').innerText = manga.title;
+    this.loadChapter();
     document.getElementById('readerModal').classList.add('open');
+    Progress.show();
     document.body.style.overflow = 'hidden';
   },
-  async loadChapterPages() {
-    const chapter = State.currentChapters[State.currentChapterIndex];
-    if (!chapter) return;
-    State.currentChapterId = chapter.id;
-    const chapNum = chapter.attributes.chapter || '0';
-    document.getElementById('readerChapterLabel').innerText = `Chapter ${chapNum}`;
-    const pages = await MangaAPI.getChapterPages(chapter.id);
-    State.chapterPages = pages;
-    const container = document.getElementById('readerPages');
-    container.innerHTML = pages.map((p, idx) => `<img class="reader-img" data-page="${idx}" src="${p}" loading="lazy" alt="Page ${idx+1}" onerror="this.src='https://via.placeholder.com/800x1200?text=Failed+to+load'">`).join('');
-    this.updateChapterSelect();
-    document.getElementById('chapterSelect').value = State.currentChapterIndex;
-    document.getElementById('prevChapterBtn').onclick = () => { if (State.currentChapterIndex > 0) { State.currentChapterIndex--; this.loadChapterPages(); } };
-    document.getElementById('nextChapterBtn').onclick = () => { if (State.currentChapterIndex < State.currentChapters.length - 1) { State.currentChapterIndex++; this.loadChapterPages(); } };
+  
+  async loadChapter() {
+    const ch = State.currentChapters[State.currentChapterIndex];
+    if (!ch) return;
+    document.getElementById('readerChapterLabel').innerText = `Chapter ${ch.number || ch.chapter || '?'}`;
     
-    // Restore saved progress
-    setTimeout(() => {
-      const savedPercent = Progress.get(State.currentMangaId, State.currentChapterId);
-      if (savedPercent > 0) {
-        const scrollHeight = document.getElementById('readerModal').scrollHeight - window.innerHeight;
-        document.getElementById('readerModal').scrollTop = scrollHeight * (savedPercent / 100);
-        Progress.updateBar(savedPercent);
-      }
-      this.attachScrollListener();
-    }, 500);
-  },
-  attachScrollListener() {
-    const modal = document.getElementById('readerModal');
-    const onScroll = () => {
-      const scrollTop = modal.scrollTop;
-      const scrollHeight = modal.scrollHeight - modal.clientHeight;
-      const percent = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-      Progress.updateBar(percent);
-      if (State.currentMangaId && State.currentChapterId) {
-        Progress.save(State.currentMangaId, State.currentChapterId, percent);
-      }
-    };
-    modal.removeEventListener('scroll', onScroll);
-    modal.addEventListener('scroll', onScroll);
-  },
-  updateChapterSelect() {
+    // Try to get images from multiple sources
+    let images = [];
+    
+    // Method 1: Try Comick API for this specific chapter
+    if (ch.url) {
+      try {
+        const proxyRes = await fetch(`${COMICK_API}/api/proxy/html?url=${encodeURIComponent(ch.url)}`);
+        const html = await proxyRes.text();
+        const imgMatches = html.match(/<img[^>]+src="([^">]+\.(jpg|jpeg|png|webp))"[^>]*>/gi) || [];
+        for (const img of imgMatches) {
+          const srcMatch = img.match(/src="([^"]+)"/);
+          if (srcMatch) images.push(srcMatch[1]);
+        }
+      } catch(e) { console.log('Comick proxy failed', e); }
+    }
+    
+    // Method 2: If no images, use placeholder + instruction
+    if (images.length === 0) {
+      images = ['https://via.placeholder.com/800x1200?text=Chapter+Images+Available+on+External+Site'];
+    }
+    
+    const container = document.getElementById('readerPages');
+    container.innerHTML = images.map(img => `<img class="reader-img" src="${img}" loading="lazy" onerror="this.src='https://via.placeholder.com/800x1200?text=Image+Load+Failed'">`).join('');
+    
+    // Update chapter select
     const select = document.getElementById('chapterSelect');
-    select.innerHTML = State.currentChapters.map((ch, idx) => `<option value="${idx}">Chapter ${ch.attributes.chapter || '?'}</option>`).join('');
-    select.onchange = (e) => { State.currentChapterIndex = parseInt(e.target.value); this.loadChapterPages(); };
+    select.innerHTML = State.currentChapters.map((c, i) => `<option value="${i}">Chapter ${c.number || c.chapter || '?'}</option>`).join('');
+    select.value = State.currentChapterIndex;
+    select.onchange = (e) => { State.currentChapterIndex = parseInt(e.target.value); this.loadChapter(); };
+    
+    document.getElementById('prevChapterBtn').onclick = () => { if (State.currentChapterIndex > 0) { State.currentChapterIndex--; this.loadChapter(); } };
+    document.getElementById('nextChapterBtn').onclick = () => { if (State.currentChapterIndex < State.currentChapters.length - 1) { State.currentChapterIndex++; this.loadChapter(); } };
+    
+    // Add to history
+    History.add(State.currentMalId, State.currentManga.title, ch.number || ch.chapter || '?', Jikan.getCoverUrl(State.currentManga));
+    this.renderHistory();
+    
+    // Restore scroll progress
+    setTimeout(() => {
+      const saved = Progress.get(State.currentMalId, ch.id || ch.number);
+      const modal = document.getElementById('readerModal');
+      if (saved > 0) modal.scrollTop = (modal.scrollHeight - modal.clientHeight) * (saved / 100);
+      modal.onscroll = () => {
+        const percent = modal.scrollTop / (modal.scrollHeight - modal.clientHeight) * 100;
+        Progress.update(percent);
+        Progress.save(State.currentMalId, ch.id || ch.number, percent);
+      };
+    }, 200);
   },
+  
   closeReader() {
     document.getElementById('readerModal').classList.remove('open');
-    document.getElementById('readerPages').innerHTML = '';
     Progress.hide();
-    Progress.updateBar(0);
     document.body.style.overflow = '';
   }
 };
 
 const App = {
   async initHome() {
-    this.loadHero();
-    this.loadRow('trendingRow', 'followedCount');
-    this.loadRow('newRow', 'createdAt');
-    this.loadRow('seinenRow', 'followedCount', ['a9e734ca-9b9d-4d7a-82b3-bc29e6d4e93d']);
-    this.initIdleShuffler();
+    const trending = await Jikan.getTrending(12);
+    const topRated = await Jikan.getTopRated(12);
+    State.heroItems = trending.slice(0, 6);
+    
+    const trendingRow = document.getElementById('trendingRow');
+    const topRow = document.getElementById('topRow');
+    if (trendingRow) trending.forEach(m => trendingRow.appendChild(UI.createCard(m)));
+    if (topRow) topRated.forEach(m => topRow.appendChild(UI.createCard(m)));
+    
+    this.initHero();
+    this.initShuffler(trending);
   },
-  async loadHero() {
-    const mangas = await MangaAPI.getMangaList('followedCount', 6);
-    State.heroItems = mangas;
-    const container = document.getElementById('heroDots');
-    if (container) container.innerHTML = State.heroItems.map((_, i) => `<div class="hdot" onclick="App.setHero(${i})"></div>`).join('');
+  
+  initHero() {
+    if (!State.heroItems.length) return;
     this.setHero(0);
     if (State.heroTimer) clearInterval(State.heroTimer);
-    State.heroTimer = setInterval(() => this.setHero((State.heroIndex + 1) % State.heroItems.length), 8000);
+    State.heroTimer = setInterval(() => this.setHero((State.heroIndex + 1) % State.heroItems.length), 7000);
+    
+    const dots = document.getElementById('heroDots');
+    if (dots) dots.innerHTML = State.heroItems.map((_, i) => `<div class="hdot" onclick="App.setHero(${i})"></div>`).join('');
   },
-  setHero(index) {
-    State.heroIndex = index;
-    const m = State.heroItems[index];
+  
+  setHero(idx) {
+    State.heroIndex = idx;
+    const m = State.heroItems[idx];
     if (!m) return;
-    const rel = m.relationships || [];
-    const cover = rel.find(r => r.type === 'cover_art');
-    const coverUrl = cover ? MangaAPI.getCoverUrl(m.id, cover.attributes.fileName) : '';
-    const title = m.attributes.title?.en || Object.values(m.attributes.title || {})[0] || 'Unknown';
-    const year = m.attributes.year || 'Unknown';
-    const rating = m.attributes?.rating?.bayesian?.toFixed(1) || 'N/A';
-    const desc = m.attributes.description?.en || 'No description available.';
-    document.getElementById('heroBg').style.backgroundImage = `url(${coverUrl})`;
-    document.getElementById('heroTitle').innerText = title;
-    document.getElementById('heroOverview').innerText = desc;
-    document.getElementById('heroMeta').innerHTML = `<span>⭐ ${rating}</span><span>📅 ${year}</span><span>📖 ${m.attributes.status || 'Ongoing'}</span>`;
+    document.getElementById('heroBg').style.backgroundImage = `url(${Jikan.getCoverUrl(m)})`;
+    document.getElementById('heroTitle').innerText = m.title;
+    document.getElementById('heroOverview').innerText = m.synopsis || 'No description available.';
+    document.getElementById('heroMeta').innerHTML = `<span>⭐ ${m.score || 'N/A'}</span><span>📅 ${m.published?.prop?.from?.year || 'Unknown'}</span><span>📖 ${m.status || 'Unknown'}</span>`;
     document.getElementById('heroReadBtn').onclick = () => this.openManga(m);
-    document.querySelectorAll('.hdot').forEach((dot, i) => dot.classList.toggle('active', i === index));
+    document.querySelectorAll('.hdot').forEach((dot, i) => dot.classList.toggle('active', i === idx));
   },
-  async loadRow(containerId, order, tags = null) {
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    const mangas = await MangaAPI.getMangaList(order, 15, 0, tags);
-    container.innerHTML = '';
-    mangas.forEach(m => container.appendChild(UI.createCard(m)));
-  },
-  async initIdleShuffler() {
-    const mangas = await MangaAPI.getMangaList('followedCount', 20);
+  
+  async initShuffler(mangas) {
     State.idleItems = mangas;
     State.idleIndex = 0;
-    const img = document.getElementById('shuffleImg');
-    if (img && State.idleItems.length) {
-      const cover = State.idleItems[0].relationships?.find(r => r.type === 'cover_art');
-      img.src = cover ? MangaAPI.getCoverUrl(State.idleItems[0].id, cover.attributes.fileName) : '';
-    }
+    if (mangas[0]) document.getElementById('shuffleImg').src = Jikan.getCoverUrl(mangas[0]);
+    
     if (State.idleTimer) clearInterval(State.idleTimer);
     State.idleTimer = setInterval(() => {
       if (!State.isShuffling) {
         State.idleIndex = (State.idleIndex + 1) % State.idleItems.length;
-        const imgEl = document.getElementById('shuffleImg');
-        if (imgEl) {
-          imgEl.style.opacity = '0';
-          setTimeout(() => {
-            const cover = State.idleItems[State.idleIndex].relationships?.find(r => r.type === 'cover_art');
-            imgEl.src = cover ? MangaAPI.getCoverUrl(State.idleItems[State.idleIndex].id, cover.attributes.fileName) : '';
-            imgEl.style.opacity = '1';
-          }, 500);
-        }
+        const img = document.getElementById('shuffleImg');
+        if (img) img.src = Jikan.getCoverUrl(State.idleItems[State.idleIndex]);
       }
-    }, 3000);
+    }, 4000);
+    
+    document.getElementById('shuffleBtn').onclick = () => this.shuffle();
   },
+  
   async shuffle() {
     State.isShuffling = true;
     const card = document.getElementById('shuffleCard');
     const info = document.getElementById('shuffleInfo');
-    const initBtn = document.getElementById('shuffleInitBtn');
-    if (initBtn) initBtn.style.display = 'none';
-    info.classList.remove('visible');
     card.classList.add('spinning');
+    info.classList.remove('visible');
+    
     const randomPage = Math.floor(Math.random() * 10) + 1;
-    const mangas = await MangaAPI.getMangaList('followedCount', 30, randomPage * 30);
-    const randomManga = mangas[Math.floor(Math.random() * mangas.length)];
+    const res = await fetch(`${JIKAN_API}/top/manga?filter=bypopularity&limit=20&page=${randomPage}`);
+    const data = await res.json();
+    const randomManga = data.data[Math.floor(Math.random() * data.data.length)];
+    
     setTimeout(() => {
       card.classList.remove('spinning');
-      const cover = randomManga.relationships?.find(r => r.type === 'cover_art');
-      const imgSrc = cover ? MangaAPI.getCoverUrl(randomManga.id, cover.attributes.fileName) : '';
-      document.getElementById('shuffleImg').src = imgSrc;
-      const title = randomManga.attributes.title?.en || Object.values(randomManga.attributes.title || {})[0] || 'Unknown';
-      document.getElementById('shuffleName').innerText = title;
+      document.getElementById('shuffleImg').src = Jikan.getCoverUrl(randomManga);
+      document.getElementById('shuffleName').innerText = randomManga.title;
       document.getElementById('shuffleReadBtn').onclick = () => this.openManga(randomManga);
       info.classList.add('visible');
       State.isShuffling = false;
-    }, 1200);
+    }, 800);
   },
-  async initGrid(slug, title, order, tags = null) {
-    State.gridType = 'manga';
-    State.currentOrder = order;
-    State.currentTags = tags;
+  
+  async initGrid(title, fetchFn) {
     document.getElementById('gridTitle').innerText = title;
-    this.loadGrid(1);
+    State.currentFetch = fetchFn;
+    State.currentPage = 1;
+    await this.loadGrid(1);
   },
+  
   async loadGrid(page) {
     const container = document.getElementById('movieGrid');
     if (!container) return;
-    const offset = (page - 1) * 20;
-    const mangas = await MangaAPI.getMangaList(State.currentOrder, 20, offset, State.currentTags);
+    const data = await State.currentFetch(30);
     if (page === 1) container.innerHTML = '';
-    mangas.forEach(m => container.appendChild(UI.createCard(m)));
-  },
-  loadMore() { State.currentPage++; this.loadGrid(State.currentPage); },
-  async openManga(manga) {
-    const chapters = await MangaAPI.getChapters(manga.id);
-    if (chapters.length === 0) { alert('No chapters found for this manga.'); return; }
-    UI.openReader(manga, chapters, 0);
-  },
-  async resumeReading(mangaId, chapterNum) {
-    const manga = await MangaAPI.getMangaById(mangaId);
-    if (!manga) return;
-    const chapters = await MangaAPI.getChapters(mangaId);
-    const chapterIndex = chapters.findIndex(ch => parseFloat(ch.attributes.chapter) === chapterNum);
-    if (chapterIndex === -1) { alert('Chapter not found'); return; }
-    UI.openReader(manga, chapters, chapterIndex);
-    document.getElementById('historyDropdown').classList.remove('open');
-  },
-  async doSearch(q) {
-    if (!q.trim()) return;
-    Router.go('search');
-    const container = document.getElementById('searchGrid');
-    if (!container) return;
-    document.getElementById('searchTitle').innerText = `Results for "${q}"`;
-    const results = await MangaAPI.searchManga(q, 40);
-    container.innerHTML = results.length ? '' : '<p>No manga found.</p>';
-    results.forEach(m => container.appendChild(UI.createCard(m)));
-  }
-};
-
-// Add to history when reading a chapter
-const originalLoadChapterPages = UI.loadChapterPages;
-UI.loadChapterPages = async function() {
-  await originalLoadChapterPages.call(this);
-  const manga = State.currentManga;
-  const chapter = State.currentChapters[State.currentChapterIndex];
-  if (manga && chapter) {
-    const title = manga.attributes.title?.en || Object.values(manga.attributes.title || {})[0] || 'Unknown';
-    const chapNum = chapter.attributes.chapter || '0';
-    const cover = manga.relationships?.find(r => r.type === 'cover_art');
-    const coverUrl = cover ? MangaAPI.getCoverUrl(manga.id, cover.attributes.fileName) : '';
-    History.add(manga.id, title, chapNum, coverUrl);
-  }
-};
-
-document.getElementById('searchInput')?.addEventListener('input', (e) => {
-  clearTimeout(State.searchTimer);
-  const val = e.target.value;
-  if (!val.trim()) {
-    if (State.currentSection === 'search') Router.go('home');
-    return;
-  }
-  State.searchTimer = setTimeout(() => App.doSearch(val), 500);
-});
-window.onclick = (e) => { if (e.target === document.getElementById('readerModal')) UI.closeReader(); };
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape') UI.closeReader(); });
-window.onload = () => Router.go('home');
-</script>
-</body>
-</html>
